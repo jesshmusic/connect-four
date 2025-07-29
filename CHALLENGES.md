@@ -1,0 +1,3 @@
+* Replace the 'Drop' button with a representation of the current player's token, e.g. if it's red's turn, show a semi-transparent red token above each column.
+* Keep track of and display how many times each player has won. Save it so the score is tracked even when reloading the page.
+* Try to implement the `checkForWinner` function yourself: it should check for four tokens in a row in the horizontal, vertical, and diagonal directions.

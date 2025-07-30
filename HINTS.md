@@ -1,6 +1,0 @@
--   First think about how to represent the game state: you will need to at least keep track of the board, the current player, and the winner.
--   To represent the board, we strongly recommend a 2D array and making use of the `window.connectFour.checkForWinner` utility we provide (see [Important section](./connectFour.js#important)).
--   Start by just rendering the board. Create a static board that renders player tokens - you can use the `exampleBoard` above. Think about which squares on the board correspond to which elements in your 2D array. Remember that a Connect 4 board fills up from the bottom, so you might save yourself a lot of headaches if the bottom left square points to `yourBoard[0][0]`.
--   With the board rendering, you should move onto dropping tokens. You'll need to check the next available free space in that column and, if there is one, insert a token and update the board display.
--   After dropping a token, you'll need to switch players. At this point, you're nearly done: all that's left is to check for win/draw conditions.
--   Finally, check for a win/draw after each turn (use the [utility we provide!](./connectFour.js#important)) and update the UI accordingly to show the 'win'/'draw' messages and replace the 'Drop' buttons with a 'Play again' button. This button should create an empty game board, and set the player back to player 1.

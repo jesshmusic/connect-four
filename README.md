@@ -1,89 +1,129 @@
-## Objective
+# Connect Four (Next.js + TypeScript)
 
-Create a 2-player game of Connect Four with TypeScript and React.
+![React](https://img.shields.io/badge/framework-React-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/language-TypeScript-blue?logo=typescript)
+![Next.js](https://img.shields.io/badge/framework-Next.js-black?logo=next.js)
+![Game](https://img.shields.io/badge/project-Connect4-green)
 
-## Prompt
+A modern Connect Four game built with **Next.js**, **React 19**, and **TypeScript** using the App Router and React Server Components. Includes keyboard and mouse interaction, sound effects for gameplay, and clear modular organization.
 
-Create a two-player game of [Connect Four](https://en.wikipedia.org/wiki/Connect_Four)
+---
 
-![](https://wookie.codesubmit.io/static/challenges/connect-four/connect-four.png)
+## 🎮 Features
 
-### Requirements
+- Interactive 7x6 Connect Four board
+- Keyboard and click-based token drop
+- Sound effects on drop, win, and draw
+- State and logic handled in a single file
+- LocalStorage win tracking
+- Fully typed with TypeScript
 
-- The board should be 7 wide by 6 high
-- It should alternate between the 'red' and 'yellow' players turn
-- Clicking the "Drop" button should drop a token of the current player's to the bottom-most free position
-- Clicking the "Drop" button on a full column should have no effect
-- If either player gets four in a row (horizontally, vertically, or diagonally):
-  - The "COLOR's turn" heading should be replaced by "COLOR won!"
-  - The "Drop" buttons should be replaced by a "Play again" button
-- If the board is full and there is no winner:
-  - The "COLOR's turn" heading should be replaced by "Draw!"
-  - The "Drop" buttons should be replaced by a "Play again" button
+---
 
-### Important
+## 🗂 Project Structure
 
-- Checking the win condition is outside the scope of this question. We have provided a [utility to check whether there is a winner or draw](./src/utils/connectFour.ts). Example usage:
-
-```js
-// Board must be a 2D array filled with `null` for empty space
-// and primitive values representing player tokens (numbers, strings)
-// e.g. 1 or 2, 'red' or 'yellow', 'player 1' or 'player 2'
-//
-// returns `null` for no winner, 'draw' for draw, or the value of the winning token
-const exampleBoard = [
-  [1, 2, null, null, null, null],
-  [1, 1, 1, 1, null, null], // player `1` has 4 in a row
-  [2, null, null, null, null, null],
-  [2, null, null, null, null, null],
-  [2, null, null, null, null, null],
-  [null, null, null, null, null, null],
-  [null, null, null, null, null, null],
-];
-
-const winner = checkForWinner(exampleBoard);
-console.log(winner); // 1
+```
+src/
+├── app/
+│   ├── layout.tsx              # App layout wrapper
+│   ├── page.tsx                # Main game component with all logic
+│   └── globals.css             # Tailwind and global styles
+│
+├── components/
+│   ├── GameBoard.tsx           # Renders the Connect Four grid UI
+│   ├── DropButton.tsx          # Drop button component per column
+│   └── PlayerToken.tsx         # SVG-rendered token
+│
+├── utils/
+│   └── connectFour.ts          # Game rules, types, win tracking, and logic helpers
 ```
 
-## Hints and challenges
+---
 
-See the HINTS.md file if you get stuck and the CHALLENGES.md file if you've finished with extra time and would like to show off your skills!
+## ⚙️ Core Logic Overview
 
-### Evaluation Criteria
+### `page.tsx`
+- Manages `board`, `currentPlayer`, `winner`, and `statusMessage`
+- Contains `handleDrop(col)` to process token drops
+- Calls `checkForWinner()` from `connectFour.ts`
 
-- **TypeScript** best practices
-- Show us your work through your commit history
-- We're looking for you to produce working code, with enough room to demonstrate how to structure components in a small program
-- Completeness: Did you complete the features?
-- Correctness: Does the functionality act in sensible, thought-out ways?
-- Maintainability: Is it written in a clean, maintainable way?
-- Testing: Is the system adequately tested?
+### `GameBoard.tsx`
+- Displays a 7x6 grid of tokens
+- Receives game state and triggers drops via `onDrop`
 
-### CodeSubmit
+### `DropButton.tsx`
+- A small button shown above each column
+- Triggers sound and `onDrop()` when clicked
 
-Please organize, design, test, and document your code as if it were going into production - then push your changes to the master branch. After you have pushed your code, you may submit the assignment on the assignment page.
+### `PlayerToken.tsx`
+- Renders a red or yellow circle representing a player
 
-All the best and happy coding,
+---
 
-The Reserv Team
+## 🔧 `connectFour.ts` Details
 
-### Getting Started
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Defines game logic, types, and win-stat helpers.
 
-First, run the development server:
+### ➕ Types
+- `BoardState`, `GameState`, `WinStats`, `GameBoardProps`
 
-```console
-npm run dev
+### 🧩 Game Logic
+- `checkVerticalWinner(board)`
+- `checkHorizontalWinner(board)`
+- `checkDiagonalWinner(board)`
+- `checkForWinner(board)` — returns a winner token or `"draw"`
+
+### ♻️ Utility
+- `deepClone(board)` — returns a deep copy
+- `DEFAULT_BOARD_STATE` — 7x6 `null` grid
+
+### 🧮 Win Tracking
+- `loadWinStats()` — loads from localStorage
+- `saveWinStats(stats)` — saves to localStorage
+
+---
+
+## 🔊 Sounds
+
+All sounds are stored under `public/sounds/`:
+
+- `drop.mp3` – on token drop
+- `win.mp3` – when a player wins
+- `draw.mp3` – when the game ends in a tie
+
+---
+
+## 🚀 Getting Started
+
+### 1. Install dependencies
+
+```bash
+yarn install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Start the development server
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-### Testing
-
-```console
-npm test
+```bash
+yarn dev
 ```
 
-More info on react-testing-library: https://testing-library.com/docs/react-testing-library/cheatsheet
+Then visit: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🧪 Running Tests
+
+```bash
+yarn test
+```
+
+Test file:
+```
+src/app/__tests__/page.test.tsx
+```
+
+---
+
+## 📄 License
+
+MIT

@@ -5,15 +5,17 @@ import styles from "./page.module.css";
 import GameBoard from '@/components/GameBoard';
 import PlayerToken, {PlayerColor} from '@/components/PlayerToken';
 import {useState} from 'react';
+import {GameState} from '@/utils/connectFour';
 
 const DEFAULT_GAME_STATE = {
   currentPlayer: PlayerColor.RED,
   hasWinner: false,
   statusMessage: "RED's turn",
+  shouldReset: false,
 };
 
 export default function Home() {
-  const [gameState, setGameState] = useState(DEFAULT_GAME_STATE);
+  const [gameState, setGameState] = useState<GameState>(DEFAULT_GAME_STATE);
 
   return (
     <div className={styles.page}>
@@ -32,7 +34,10 @@ export default function Home() {
         {
           (gameState.hasWinner || gameState.statusMessage === 'Draw!') && (<p>
             <button
-              onClick={() => setGameState(DEFAULT_GAME_STATE)}
+              onClick={() => setGameState({
+                ...DEFAULT_GAME_STATE,
+                shouldReset: true,
+              })}
               style={{
                 border: '2px solid #cc0000',
                 borderRadius: '5px',

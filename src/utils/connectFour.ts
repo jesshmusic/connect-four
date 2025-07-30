@@ -75,6 +75,7 @@ export type GameState = {
   currentPlayer: PlayerColor;
   hasWinner: boolean;
   statusMessage: string;
+  shouldReset?: boolean;
 }
 export type GameBoardProps = {
   gameState: GameState;

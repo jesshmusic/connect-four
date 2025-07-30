@@ -1,5 +1,5 @@
 import React from 'react';
-import {PlayerColor} from '@/components/PlayerToken';
+import PlayerToken, {PlayerColor} from '@/components/PlayerToken';
 
 const DropButton = ({ onClick, columnNumber, currentPlayer }:{
   onClick: (columnNumber: number) => void,
@@ -10,16 +10,41 @@ const DropButton = ({ onClick, columnNumber, currentPlayer }:{
     <button
       onClick={() => onClick(columnNumber)}
       style={{
-        border: `2px solid ${currentPlayer === PlayerColor.RED ? '#cc0000' : '#fdb300'}`,
-        borderRadius: '5px',
+        backgroundColor: 'transparent',
+        border: 'none',
         cursor: 'pointer',
         fontSize: '20px',
-        height: '50px',
+        height: '60px',
+        position: 'relative',
         textAlign: 'center',
         width: '100px',
       }}
+      className="drop-button"
     >
-      Drop
+
+      <style jsx>{`
+        .drop-button:hover svg {
+          opacity: 1 !important;
+        }
+        
+        .drop-text {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: white;
+          opacity: 0;
+          transition: opacity 0.4s ease-in-out;
+        }
+        
+        .drop-button:hover .drop-text {
+          opacity: 1;
+        }
+      `}</style>
+      <div style={{position: 'relative', width: '100%', height: '100%'}}>
+        <PlayerToken player={currentPlayer} size={60} opacity={0.5} />
+        <span className="drop-text">Drop</span>
+      </div>
     </button>
   )
 }

@@ -15,10 +15,15 @@ const GameBoard = ({gameState, setGameState}: GameBoardProps) => {
   const [board, setBoard] = useState<BoardState>(DEFAULT_BOARD_STATE);
 
   useEffect(() => {
-    if (!gameState.hasWinner && gameState.statusMessage === 'RED\'s turn') {
+    if (gameState.shouldReset === true) {
       setBoard(deepClone(DEFAULT_BOARD_STATE));
+      setGameState({
+        ...gameState,
+        shouldReset: false,
+        }
+      )
     }
-  }, [gameState])
+  }, [gameState]);
 
   const getCellState = (cellValue: number | null): PlayerColor | null => {
     switch (cellValue) {
@@ -32,15 +37,22 @@ const GameBoard = ({gameState, setGameState}: GameBoardProps) => {
   }
 
   const handleClick = (columnNumber: number) => {
-    const newBoard = deepClone(board);
-
-    for (let rows = board.length - 1; rows >= 0; rows--) {
-      if (newBoard[rows][columnNumber] === null) {
-        newBoard[rows][columnNumber] = gameState.currentPlayer === PlayerColor.RED ? 1 : 2;
-        setBoard(newBoard);
+    const newBoard = board.map((row) => [...row]) as BoardState;
+    let tokenDropped = false;
+    for (let row = board.length - 1; row >= 0; row--) {
+      if (newBoard[row][columnNumber] === null) {
+        newBoard[row][columnNumber] = gameState.currentPlayer === PlayerColor.RED ? 1 : 2;
+        tokenDropped = true;
         break;
       }
     }
+
+    if (!tokenDropped) {
+      return;
+    }
+
+    setBoard(newBoard);
+
     const winner = checkForWinner(newBoard);
     if (winner) {
       setGameState({
@@ -49,11 +61,13 @@ const GameBoard = ({gameState, setGameState}: GameBoardProps) => {
         statusMessage: winner === 'draw' ? 'Draw!' : `${gameState.currentPlayer.toUpperCase()} wins!`,
       });
     } else {
-      const nextPlayer = gameState.currentPlayer === PlayerColor.RED ? PlayerColor.YELLOW : PlayerColor.RED;
+      const nextPlayer = gameState.currentPlayer === PlayerColor.RED ?
+        PlayerColor.YELLOW :
+        PlayerColor.RED;
       setGameState({
         currentPlayer: nextPlayer,
         hasWinner: false,
-        statusMessage: `${nextPlayer}'s turn`,
+        statusMessage: `${nextPlayer.toUpperCase()}'s turn`,
       });
     }
   }
@@ -66,7 +80,7 @@ const GameBoard = ({gameState, setGameState}: GameBoardProps) => {
           gap: '5px',
           gridTemplateColumns: 'repeat(6, 1fr)',
           gridTemplateRows: '60px',
-          height: '60px',
+          height: '80px',
           padding: '0 5px',
           width: '650px',
         }} >

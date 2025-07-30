@@ -9,21 +9,25 @@ export enum PlayerColor {
 
 interface PlayerTokenProps {
   player: PlayerColor;
+  opacity?: number;
   size?: number;
 }
 
 /**
  * Token created using Afinity Design App. (Similar to Adobe Illustrator)
  * @param player
+ * @param opacity
+ * @param size
  * @constructor
  */
-const PlayerToken = ({player, size=100}: PlayerTokenProps) => {
+const PlayerToken = ({player, opacity=1.0, size=100}: PlayerTokenProps) => {
   const playerColor = player === 'yellow' ? '#bc8e0d' : '#cc0000';
   const playerColor2 = player === 'yellow' ? '#5d4505' : '#640000';
   return (
     <svg
       width={`${size}px`}
       height={`${size}px`}
+      opacity={opacity}
       viewBox="0 0 256 256">
     <circle
       cx="129.5"

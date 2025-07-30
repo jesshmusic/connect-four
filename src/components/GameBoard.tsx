@@ -60,7 +60,7 @@ const GameBoard = ({gameState, setGameState}: GameBoardProps) => {
 
   return (
     <div>
-      {!gameState.hasWinner && (
+      {(!gameState.hasWinner && gameState.statusMessage !== 'Draw!') && (
         <div style={{
           display: 'grid',
           gap: '5px',

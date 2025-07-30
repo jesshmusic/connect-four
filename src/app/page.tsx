@@ -30,7 +30,7 @@ export default function Home() {
           <PlayerToken player={gameState.currentPlayer} size={40} />&nbsp;{gameState.statusMessage}
         </h2>
         {
-          gameState.hasWinner && (<p>
+          (gameState.hasWinner || gameState.statusMessage === 'Draw!') && (<p>
             <button
               onClick={() => setGameState(DEFAULT_GAME_STATE)}
               style={{

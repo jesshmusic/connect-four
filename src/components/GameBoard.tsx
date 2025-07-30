@@ -121,11 +121,11 @@ const GameBoard = ({
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(6, 1fr)',
-          aspectRatio: '6 / 1', // 6 buttons side-by-side
           width: '100%',
           maxWidth: '90vw',
           gap: '5px',
           margin: '0 auto',
+          height: '10vh',
         }} >
           {[0, 1, 2, 3, 4, 5].map((col) => (
             <DropButton

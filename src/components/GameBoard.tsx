@@ -17,10 +17,18 @@ const GameBoard = ({
   setWinStats,
   winStats
 }: GameBoardProps) => {
-  const dropAudio = new Audio('/sounds/drop.mp3');
-  const winAudio = new Audio('/sounds/win.mp3');
-  const drawAudio = new Audio('/sounds/draw.mp3');
   const [board, setBoard] = useState<BoardState>(DEFAULT_BOARD_STATE);
+  const [dropAudio, setDropAudio] = useState<HTMLAudioElement | null>(null);
+  const [winAudio, setWinAudio] = useState<HTMLAudioElement | null>(null);
+  const [drawAudio, setDrawAudio] = useState<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setDropAudio(new Audio('/sounds/drop.mp3'));
+      setWinAudio(new Audio('/sounds/win.mp3'));
+      setDrawAudio(new Audio('/sounds/draw.mp3'));
+    }
+  }, []);
 
   useEffect(() => {
     if (gameState.shouldReset === true) {
@@ -45,8 +53,10 @@ const GameBoard = ({
   }
 
   const handleClick = (columnNumber: number) => {
-    dropAudio.currentTime = 0;
-    dropAudio.play().catch((e) => console.warn("Audio playback failed", e));
+    if (dropAudio) {
+      dropAudio.currentTime = 0;
+      dropAudio.play().catch((e) => console.warn("Audio playback failed", e));
+    }
     const newBoard = board.map((row) => [...row]) as BoardState;
     let tokenDropped = false;
     for (let row = board.length - 1; row >= 0; row--) {
@@ -73,11 +83,15 @@ const GameBoard = ({
       setWinStats(newWinStats);
       saveWinStats(newWinStats);
       if (winner === 'draw') {
-        drawAudio.currentTime = 0;
-        drawAudio.play().catch((e) => console.warn("Audio playback failed", e));
+        if (drawAudio) {
+          drawAudio.currentTime = 0;
+          drawAudio.play().catch((e) => console.warn("Audio playback failed", e));
+        }
       } else {
-        winAudio.currentTime = 0;
-        winAudio.play().catch((e) => console.warn("Audio playback failed", e));
+        if (winAudio) {
+          winAudio.currentTime = 0;
+          winAudio.play().catch((e) => console.warn("Audio playback failed", e));
+        }
       }
       console.log('winner: ', winner)
       console.log('board: ', newBoard)

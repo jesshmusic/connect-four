@@ -8,10 +8,15 @@ import {
   checkForWinner,
   deepClone,
   DEFAULT_BOARD_STATE,
-  GameBoardProps
+  GameBoardProps, saveWinStats
 } from '@/utils/connectFour';
 
-const GameBoard = ({gameState, setGameState}: GameBoardProps) => {
+const GameBoard = ({
+  gameState,
+  setGameState,
+  setWinStats,
+  winStats
+}: GameBoardProps) => {
   const [board, setBoard] = useState<BoardState>(DEFAULT_BOARD_STATE);
 
   useEffect(() => {
@@ -55,6 +60,14 @@ const GameBoard = ({gameState, setGameState}: GameBoardProps) => {
 
     const winner = checkForWinner(newBoard);
     if (winner) {
+      const newWinStats = {
+        redWins: winStats.redWins + (winner === 1 ? 1 : 0),
+        yellowWins: winStats.yellowWins + (winner === 2 ? 1 : 0),
+        draws: winStats.draws + (winner === 'draw' ? 1 : 0),
+      }
+      setWinStats(newWinStats);
+      saveWinStats(newWinStats);
+      console.log(newWinStats);
       setGameState({
         currentPlayer: gameState.currentPlayer,
         hasWinner: winner !== 'draw',

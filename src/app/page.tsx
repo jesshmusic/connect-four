@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 import GameBoard from '@/components/GameBoard';
 import PlayerToken, {PlayerColor} from '@/components/PlayerToken';
 import {useState} from 'react';
-import {GameState} from '@/utils/connectFour';
+import {GameState, loadWinStats, WinStats} from '@/utils/connectFour';
 
 const DEFAULT_GAME_STATE = {
   currentPlayer: PlayerColor.RED,
@@ -16,12 +16,19 @@ const DEFAULT_GAME_STATE = {
 
 export default function Home() {
   const [gameState, setGameState] = useState<GameState>(DEFAULT_GAME_STATE);
+  const [winStats, setWinStats] = useState<WinStats>(loadWinStats());
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
         <h1>Connect Four</h1>
-        <h2
+        <div style={{ color: '#fcc'}}>
+          <p><strong style={{fontSize: '18px', textDecoration: 'underline'}}>Stats:</strong></p>
+          <p>Red: {winStats.redWins}</p>
+          <p>Yellow: {winStats.yellowWins}</p>
+          <p>Draws: {winStats.draws}</p>
+        </div>
+        <h3
           style={{
             alignItems: 'center',
             color: `${gameState.currentPlayer === PlayerColor.RED ? '#cc0000' : '#fdb300'}`,
@@ -30,7 +37,7 @@ export default function Home() {
           }}
         >
           <PlayerToken player={gameState.currentPlayer} size={40} />&nbsp;{gameState.statusMessage}
-        </h2>
+        </h3>
         {
           (gameState.hasWinner || gameState.statusMessage === 'Draw!') && (<p>
             <button
@@ -55,7 +62,10 @@ export default function Home() {
         <div>
           <GameBoard
             gameState={gameState}
-            setGameState={setGameState} />
+            setGameState={setGameState}
+            winStats={winStats}
+            setWinStats={setWinStats}
+          />
         </div>
       </main>
       <footer className={styles.footer}>

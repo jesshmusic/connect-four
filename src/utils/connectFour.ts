@@ -81,6 +81,8 @@ export type GameBoardProps = {
   gameState: GameState;
   setGameState: (gameState: GameState) => void;
   shouldReset?: boolean;
+  winStats: WinStats;
+  setWinStats: (winStats: WinStats) => void;
 }
 export const DEFAULT_BOARD_STATE: BoardState = [
   [null, null, null, null, null, null],
@@ -91,6 +93,12 @@ export const DEFAULT_BOARD_STATE: BoardState = [
   [null, null, null, null, null, null],
   [null, null, null, null, null, null],
 ]
+
+export type WinStats = {
+  redWins: number;
+  yellowWins: number;
+  draws: number;
+}
 
 export function deepClone(arr: BoardState): BoardState {
   return JSON.parse(JSON.stringify(arr));
@@ -111,4 +119,19 @@ export function checkForWinner(board: BoardState) {
     checkHorizontalWinner(board) ||
     checkDiagonalWinner(board)
   );
+}
+
+export const loadWinStats = (): WinStats => {
+  if (typeof window === 'undefined') {
+    return {redWins: 0, yellowWins: 0, draws: 0};
+  }
+  const winStats = window.localStorage.getItem('winStats');
+  return winStats ? JSON.parse(winStats) : {redWins: 0, yellowWins: 0, draws: 0};
+}
+
+export const saveWinStats = (winStats: WinStats) => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  window.localStorage.setItem('winStats', JSON.stringify(winStats));
 }

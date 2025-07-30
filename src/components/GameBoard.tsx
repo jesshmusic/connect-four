@@ -120,12 +120,12 @@ const GameBoard = ({
       {(!gameState.hasWinner && gameState.statusMessage !== 'Draw!') && (
         <div style={{
           display: 'grid',
-          gap: '5px',
           gridTemplateColumns: 'repeat(6, 1fr)',
-          gridTemplateRows: '60px',
-          height: '80px',
-          padding: '0 5px',
-          width: '650px',
+          aspectRatio: '6 / 1', // 6 buttons side-by-side
+          width: '100%',
+          maxWidth: '90vw',
+          gap: '5px',
+          margin: '0 auto',
         }} >
           {[0, 1, 2, 3, 4, 5].map((col) => (
             <DropButton
@@ -142,8 +142,9 @@ const GameBoard = ({
         gridTemplateRows: 'repeat(7, 1fr)',
         gap: '5px',
         border: '5px solid white',
-        width: '650px',
-        height: '750px'
+        width: '100%',
+        maxWidth: '90vw',
+        aspectRatio: '6 / 7',
       }} >
         {board.map((row, rowIndex) => (
           row.map((cell, cellIndex) => {
@@ -155,7 +156,7 @@ const GameBoard = ({
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-                {cellState && <PlayerToken player={cellState} />}
+                {cellState && <PlayerToken player={cellState} size={'100%'} />}
               </div>
             )
             }

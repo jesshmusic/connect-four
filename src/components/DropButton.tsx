@@ -14,10 +14,10 @@ const DropButton = ({ onClick, columnNumber, currentPlayer }:{
         border: 'none',
         cursor: 'pointer',
         fontSize: '20px',
-        height: '60px',
         position: 'relative',
         textAlign: 'center',
-        width: '100px',
+        width: '100%',
+        aspectRatio: '10 / 6',
       }}
       className="drop-button"
     >
@@ -42,7 +42,7 @@ const DropButton = ({ onClick, columnNumber, currentPlayer }:{
         }
       `}</style>
       <div style={{position: 'relative', width: '100%', height: '100%'}}>
-        <PlayerToken player={currentPlayer} size={60} opacity={0.5} />
+        <PlayerToken player={currentPlayer} size="100%" opacity={0.5} />
         <span className="drop-text">Drop</span>
       </div>
     </button>

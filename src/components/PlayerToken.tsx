@@ -10,7 +10,7 @@ export enum PlayerColor {
 interface PlayerTokenProps {
   player: PlayerColor;
   opacity?: number;
-  size?: number;
+  size?: number | string;
 }
 
 /**
@@ -25,8 +25,8 @@ const PlayerToken = ({player, opacity=1.0, size=100}: PlayerTokenProps) => {
   const playerColor2 = player === 'yellow' ? '#5d4505' : '#640000';
   return (
     <svg
-      width={`${size}px`}
-      height={`${size}px`}
+      width={typeof size === 'number' ? `${size}px` : size}
+      height={typeof size === 'number' ? `${size}px` : size}
       opacity={opacity}
       viewBox="0 0 256 256">
     <circle

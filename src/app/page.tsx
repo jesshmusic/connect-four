@@ -2,21 +2,14 @@
 
 import Image from "next/image";
 import styles from "./page.module.css";
-import GameBoard, {DEFAULT_BOARD_STATE} from '@/components/GameBoard';
+import GameBoard from '@/components/GameBoard';
 import PlayerToken, {PlayerColor} from '@/components/PlayerToken';
 import {useState} from 'react';
-// import { deepClone, checkForWinner } from "@/utils/connectFour";
-
-export type GameState = {
-  currentPlayer: PlayerColor;
-  hasWinner: boolean;
-  statusMessage: string;
-}
 
 const DEFAULT_GAME_STATE = {
   currentPlayer: PlayerColor.RED,
   hasWinner: false,
-  statusMessage: "Player 1's turn",
+  statusMessage: "RED's turn",
 };
 
 export default function Home() {
@@ -36,9 +29,26 @@ export default function Home() {
         >
           <PlayerToken player={gameState.currentPlayer} size={40} />&nbsp;{gameState.statusMessage}
         </h2>
+        {
+          gameState.hasWinner && (<p>
+            <button
+              onClick={() => setGameState(DEFAULT_GAME_STATE)}
+              style={{
+                border: '2px solid #cc0000',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '20px',
+                height: '50px',
+                textAlign: 'center',
+                width: '100px',
+              }}
+            >
+              Reset
+            </button>
+          </p>)
+        }
         <div>
           <GameBoard
-            newBoardState={DEFAULT_BOARD_STATE}
             gameState={gameState}
             setGameState={setGameState} />
         </div>

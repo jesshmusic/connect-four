@@ -3,32 +3,22 @@
 import React, {useEffect, useState} from 'react';
 import PlayerToken, {PlayerColor} from '@/components/PlayerToken';
 import DropButton from '@/components/DropButton';
-import {GameState} from '@/app/page';
+import {
+  BoardState,
+  checkForWinner,
+  deepClone,
+  DEFAULT_BOARD_STATE,
+  GameBoardProps
+} from '@/utils/connectFour';
 
-type BoardState = Array<Array<number | null>>;
-
-type GameBoardProps = {
-  newBoardState: BoardState;
-  gameState: GameState;
-  setGameState: (gameState: GameState) => void;
-}
-
-export const DEFAULT_BOARD_STATE: BoardState = [
-  [null, null, null, null, null, null],
-  [null, null, null, null, null, null],
-  [null, null, null, null, null, null],
-  [null, null, null, null, null, null],
-  [null, null, null, null, null, null],
-  [null, null, null, null, null, null],
-  [null, null, null, null, null, null],
-]
-
-const GameBoard = ({newBoardState, gameState}: GameBoardProps) => {
-  const [board, setBoard] = useState<BoardState>(newBoardState);
+const GameBoard = ({gameState, setGameState}: GameBoardProps) => {
+  const [board, setBoard] = useState<BoardState>(DEFAULT_BOARD_STATE);
 
   useEffect(() => {
-    setBoard(newBoardState);
-  }, [newBoardState]);
+    if (!gameState.hasWinner && gameState.statusMessage === 'RED\'s turn') {
+      setBoard(deepClone(DEFAULT_BOARD_STATE));
+    }
+  }, [gameState])
 
   const getCellState = (cellValue: number | null): PlayerColor | null => {
     switch (cellValue) {
@@ -42,11 +32,35 @@ const GameBoard = ({newBoardState, gameState}: GameBoardProps) => {
   }
 
   const handleClick = (columnNumber: number) => {
-    console.log(columnNumber);
+    const newBoard = deepClone(board);
+
+    for (let rows = board.length - 1; rows >= 0; rows--) {
+      if (newBoard[rows][columnNumber] === null) {
+        newBoard[rows][columnNumber] = gameState.currentPlayer === PlayerColor.RED ? 1 : 2;
+        setBoard(newBoard);
+        break;
+      }
+    }
+    const winner = checkForWinner(newBoard);
+    if (winner) {
+      setGameState({
+        currentPlayer: gameState.currentPlayer,
+        hasWinner: winner !== 'draw',
+        statusMessage: winner === 'draw' ? 'Draw!' : `${gameState.currentPlayer.toUpperCase()} wins!`,
+      });
+    } else {
+      const nextPlayer = gameState.currentPlayer === PlayerColor.RED ? PlayerColor.YELLOW : PlayerColor.RED;
+      setGameState({
+        currentPlayer: nextPlayer,
+        hasWinner: false,
+        statusMessage: `${nextPlayer}'s turn`,
+      });
+    }
   }
 
   return (
     <div>
+      {!gameState.hasWinner && (
         <div style={{
           display: 'grid',
           gap: '5px',
@@ -56,14 +70,15 @@ const GameBoard = ({newBoardState, gameState}: GameBoardProps) => {
           padding: '0 5px',
           width: '650px',
         }} >
-        {[0, 1, 2, 3, 4, 5].map((col) => (
-          <DropButton
-            key={col}
-            onClick={handleClick}
-            currentPlayer={gameState.currentPlayer}
-            columnNumber={col} />
-        ))}
-      </div>
+          {[0, 1, 2, 3, 4, 5].map((col) => (
+            <DropButton
+              key={col}
+              onClick={handleClick}
+              currentPlayer={gameState.currentPlayer}
+              columnNumber={col} />
+          ))}
+        </div>
+      )}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(6, 1fr)',

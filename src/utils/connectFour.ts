@@ -1,3 +1,5 @@
+import {PlayerColor} from '@/components/PlayerToken';
+
 type Board = Array<Array<string | number | null | undefined>>;
 const NUM_IN_ROW_WIN = 4;
 
@@ -68,11 +70,32 @@ const checkDiagonalWinner = (board: Board) => {
   return null;
 };
 
-export function deepClone(arr: Board) {
-  JSON.parse(JSON.stringify(arr));
+export type BoardState = Array<Array<number | null>>;
+export type GameState = {
+  currentPlayer: PlayerColor;
+  hasWinner: boolean;
+  statusMessage: string;
+}
+export type GameBoardProps = {
+  gameState: GameState;
+  setGameState: (gameState: GameState) => void;
+  shouldReset?: boolean;
+}
+export const DEFAULT_BOARD_STATE: BoardState = [
+  [null, null, null, null, null, null],
+  [null, null, null, null, null, null],
+  [null, null, null, null, null, null],
+  [null, null, null, null, null, null],
+  [null, null, null, null, null, null],
+  [null, null, null, null, null, null],
+  [null, null, null, null, null, null],
+]
+
+export function deepClone(arr: BoardState): BoardState {
+  return JSON.parse(JSON.stringify(arr));
 }
 
-export function checkForWinner(board: Board) {
+export function checkForWinner(board: BoardState) {
   let hasEmptySpace = false;
   board.forEach(
     (row) =>

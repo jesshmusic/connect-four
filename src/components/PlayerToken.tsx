@@ -9,6 +9,7 @@ export enum PlayerColor {
 
 interface PlayerTokenProps {
   player: PlayerColor;
+  size?: number;
 }
 
 /**
@@ -16,13 +17,13 @@ interface PlayerTokenProps {
  * @param player
  * @constructor
  */
-const PlayerToken = ({player}: PlayerTokenProps) => {
+const PlayerToken = ({player, size=100}: PlayerTokenProps) => {
   const playerColor = player === 'yellow' ? '#bc8e0d' : '#cc0000';
   const playerColor2 = player === 'yellow' ? '#5d4505' : '#640000';
   return (
     <svg
-      width="100px"
-      height="100px"
+      width={`${size}px`}
+      height={`${size}px`}
       viewBox="0 0 256 256">
     <circle
       cx="129.5"

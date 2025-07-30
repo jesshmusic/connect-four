@@ -1,15 +1,46 @@
+'use client'
+
 import Image from "next/image";
 import styles from "./page.module.css";
 import GameBoard, {DEFAULT_BOARD_STATE} from '@/components/GameBoard';
+import PlayerToken, {PlayerColor} from '@/components/PlayerToken';
+import {useState} from 'react';
 // import { deepClone, checkForWinner } from "@/utils/connectFour";
 
+export type GameState = {
+  currentPlayer: PlayerColor;
+  hasWinner: boolean;
+  statusMessage: string;
+}
+
+const DEFAULT_GAME_STATE = {
+  currentPlayer: PlayerColor.RED,
+  hasWinner: false,
+  statusMessage: "Player 1's turn",
+};
+
 export default function Home() {
+  const [gameState, setGameState] = useState(DEFAULT_GAME_STATE);
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
         <h1>Connect Four</h1>
+        <h2
+          style={{
+            alignItems: 'center',
+            color: `${gameState.currentPlayer === PlayerColor.RED ? '#cc0000' : '#fdb300'}`,
+            display: 'flex',
+            flexDirection: 'row',
+          }}
+        >
+          <PlayerToken player={gameState.currentPlayer} size={40} />&nbsp;{gameState.statusMessage}
+        </h2>
         <div>
-          <GameBoard newGameState={DEFAULT_BOARD_STATE} />
+          <GameBoard
+            newBoardState={DEFAULT_BOARD_STATE}
+            gameState={gameState}
+            setGameState={setGameState} />
         </div>
       </main>
       <footer className={styles.footer}>

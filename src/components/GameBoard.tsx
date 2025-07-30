@@ -17,6 +17,9 @@ const GameBoard = ({
   setWinStats,
   winStats
 }: GameBoardProps) => {
+  const dropAudio = new Audio('/sounds/drop.mp3');
+  const winAudio = new Audio('/sounds/win.mp3');
+  const drawAudio = new Audio('/sounds/draw.mp3');
   const [board, setBoard] = useState<BoardState>(DEFAULT_BOARD_STATE);
 
   useEffect(() => {
@@ -42,6 +45,8 @@ const GameBoard = ({
   }
 
   const handleClick = (columnNumber: number) => {
+    dropAudio.currentTime = 0;
+    dropAudio.play().catch((e) => console.warn("Audio playback failed", e));
     const newBoard = board.map((row) => [...row]) as BoardState;
     let tokenDropped = false;
     for (let row = board.length - 1; row >= 0; row--) {
@@ -67,7 +72,18 @@ const GameBoard = ({
       }
       setWinStats(newWinStats);
       saveWinStats(newWinStats);
-      console.log(newWinStats);
+      if (winner === 'draw') {
+        drawAudio.currentTime = 0;
+        drawAudio.play().catch((e) => console.warn("Audio playback failed", e));
+      } else {
+        winAudio.currentTime = 0;
+        winAudio.play().catch((e) => console.warn("Audio playback failed", e));
+      }
+      console.log('winner: ', winner)
+      console.log('board: ', newBoard)
+      console.log('board: ', newBoard.map((row) => row.join(' ')).join('\n'))
+      console.log('board: ', newBoard.map((row) => row.join(' ')).join(''))
+
       setGameState({
         currentPlayer: gameState.currentPlayer,
         hasWinner: winner !== 'draw',

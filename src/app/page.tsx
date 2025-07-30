@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import PlayerToken from '@/components/PlayerToken';
+import GameBoard, {DEFAULT_BOARD_STATE} from '@/components/GameBoard';
 // import { deepClone, checkForWinner } from "@/utils/connectFour";
 
 export default function Home() {
@@ -9,9 +9,7 @@ export default function Home() {
       <main className={styles.main}>
         <h1>Connect Four</h1>
         <div>
-          <h2>Sample Tokens</h2>
-          <PlayerToken player="red"/>
-          <PlayerToken player="yellow"/>
+          <GameBoard newGameState={DEFAULT_BOARD_STATE} />
         </div>
       </main>
       <footer className={styles.footer}>

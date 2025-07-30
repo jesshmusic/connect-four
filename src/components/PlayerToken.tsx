@@ -1,6 +1,11 @@
+"use client"
+
 import React from 'react';
 
-type PlayerColor = 'red' | 'yellow';
+export enum PlayerColor {
+  RED = 'red',
+  YELLOW = 'yellow'
+}
 
 interface PlayerTokenProps {
   player: PlayerColor;

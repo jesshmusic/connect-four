@@ -12,7 +12,7 @@ interface PlayerTokenProps {
   size?: number | string;
   opacity?: number;
   isDropping?: boolean;
-  dropRows: number;
+  dropRows?: number;
 }
 
 const PlayerToken = ({
@@ -34,7 +34,7 @@ const PlayerToken = ({
           {
             width: px,
             height: px,
-            "--rows": dropRows,
+            "--rows": dropRows ? dropRows : 0,
           } as React.CSSProperties
         }
       >

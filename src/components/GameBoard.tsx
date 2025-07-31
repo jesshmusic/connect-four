@@ -156,8 +156,6 @@ const GameBoard = ({
         {board.map((row, rowIndex) =>
           row.map((cell, cellIndex) => {
             const cellState = getCellState(cell);
-            const isDropping =
-              lastDrop?.row === rowIndex && lastDrop?.col === cellIndex;
 
             return (
               <div

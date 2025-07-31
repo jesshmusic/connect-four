@@ -47,17 +47,17 @@ export default function Home() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '2rem',
+          gap: '1rem',
           width: '100%',
           maxWidth: 'min(90vw, 700px)',
         }}
       >
-        <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 3rem)' }}>Connect Four</h1>
+        <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 3rem)', marginBottom: 0 }}>Connect Four</h1>
 
-        <div style={{ textAlign: 'center', color: '#fcc' }}>
-          <p><strong style={{ fontSize: '1.1rem', textDecoration: 'underline' }}>Stats:</strong></p>
-          <p>Red: {winStats.redWins}</p>
-          <p>Yellow: {winStats.yellowWins}</p>
+        <div style={{ display: 'flex', textAlign: 'center', color: '#fcc' }}>
+          <p><strong style={{ fontSize: '1.1rem', marginRight: '10px', textDecoration: 'underline' }}>Stats:</strong></p>
+          <p style={{ marginRight: '10px' }}>Red: {winStats.redWins}</p>
+          <p style={{ marginRight: '10px' }}>Yellow: {winStats.yellowWins}</p>
           <p>Draws: {winStats.draws}</p>
         </div>
 
@@ -69,7 +69,8 @@ export default function Home() {
             flexDirection: 'row',
             fontSize: '1.2rem',
             gap: '0.5rem',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            marginBottom: 0,
           }}
         >
           <PlayerToken player={gameState.currentPlayer} size={40} />

@@ -93,10 +93,6 @@ const GameBoard = ({
           winAudio.play().catch((e) => console.warn("Audio playback failed", e));
         }
       }
-      console.log('winner: ', winner)
-      console.log('board: ', newBoard)
-      console.log('board: ', newBoard.map((row) => row.join(' ')).join('\n'))
-      console.log('board: ', newBoard.map((row) => row.join(' ')).join(''))
 
       setGameState({
         currentPlayer: gameState.currentPlayer,

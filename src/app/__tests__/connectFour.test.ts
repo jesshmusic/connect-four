@@ -8,30 +8,18 @@ import {
   type WinStats,
 } from '@/utils/connectFour';
 
-/* ── helper types ─────────────────────────────────────────── */
+/* ── helpers ────────────────────────────────────────────────── */
 
-type GlobalWithWindow = typeof globalThis & {
-  window?: Window & typeof globalThis;
-};
-
-type StorageStub = Pick<
-  Storage,
-  'getItem' | 'setItem' | 'clear' | 'removeItem' | 'key' | 'length'
->;
-
-const g = global as GlobalWithWindow;
-
-/* ── board helper ──────────────────────────────────────────── */
-
-const place = (coords: Array<[number, number]>, token: 1 | 2) => {
+const place = (
+  coords: Array<[x: number, y: number]>,
+  token: 1 | 2,
+) => {
   const board = deepClone(DEFAULT_BOARD_STATE);
   coords.forEach(([x, y]) => (board[x][y] = token));
   return board;
 };
 
-const DEFAULTS: WinStats = { redWins: 0, yellowWins: 0, draws: 0 };
-
-/* ── winner detection tests ───────────────────────────────── */
+/* ── winner detection tests ────────────────────────────────── */
 
 describe('checkForWinner – vertical / horizontal / diagonal', () => {
   it('detects a vertical win', () => {
@@ -106,7 +94,7 @@ describe('checkForWinner – draw & null', () => {
   });
 });
 
-/* ── deepClone ────────────────────────────────────────────── */
+/* ── deepClone ─────────────────────────────────────────────── */
 
 describe('deepClone()', () => {
   it('creates a structural clone', () => {
@@ -116,85 +104,62 @@ describe('deepClone()', () => {
   });
 });
 
-/* ── helpers for window stubbing ──────────────────────────── */
-
-function withStubbedWindow<T>(
-  storageImpl: () => StorageStub,
-  fn: (stub: StorageStub) => T,
-): T {
-  const originalWindow = g.window;
-  const stubStorage: StorageStub = storageImpl();
-
-  // minimal window replacement
-  const stubWindow = {
-    localStorage: stubStorage as unknown as Storage,
-  } as Window & typeof globalThis;
-
-  Object.defineProperty(g, 'window', {
-    value: stubWindow,
-    configurable: true,
-  });
-
-  try {
-    return fn(stubStorage);
-  } finally {
-    Object.defineProperty(g, 'window', {
-      value: originalWindow,
-      configurable: true,
-    });
-  }
-}
+/* ── loadWinStats / saveWinStats ───────────────────────────── */
 
 describe('loadWinStats()', () => {
+  const DEFAULTS: WinStats = { redWins: 0, yellowWins: 0, draws: 0 };
+
   it('returns defaults when `window` is undefined (server env)', () => {
-    const orig = g.window;
-    Object.defineProperty(g, 'window', { value: undefined, configurable: true });
+    // Backup and delete the global window reference
+    const originalWindow = global.window;
+    // @ts-expect-error – we intentionally remove it
+    delete global.window;
 
     expect(loadWinStats()).toEqual(DEFAULTS);
 
-    Object.defineProperty(g, 'window', { value: orig, configurable: true });
+    // Restore window so other tests stay happy
+    global.window = originalWindow;
   });
 
-  it('parses stats from localStorage when present', () => {
-    const fake: WinStats = { redWins: 3, yellowWins: 2, draws: 1 };
+  it('parses stats from localStorage when available (browser env)', () => {
+    const fakeStats: WinStats = { redWins: 3, yellowWins: 2, draws: 1 };
 
-    // JSDOM’s Storage object already exists; just mock its method.
-    const spy = jest
-      .spyOn(Storage.prototype, 'getItem')
-      .mockImplementation((key) =>
-        key === 'winStats' ? JSON.stringify(fake) : null,
-      );
+    // Stub localStorage
+    Object.defineProperty(window, 'localStorage', {
+      value: {
+        getItem: jest.fn(() => JSON.stringify(fakeStats)),
+        setItem: jest.fn(),
+      },
+      writable: true,
+    });
 
-    expect(loadWinStats()).toEqual(fake);
-
-    spy.mockRestore();
+    expect(loadWinStats()).toEqual(fakeStats);
   });
 });
 
 describe('saveWinStats()', () => {
-  const NEW_STATS: WinStats = { redWins: 5, yellowWins: 4, draws: 2 };
+  const STATS: WinStats = { redWins: 5, yellowWins: 4, draws: 2 };
 
-  it('is a no-op when `window` is undefined (server env)', () => {
-    const orig = g.window;
-    Object.defineProperty(g, 'window', { value: undefined, configurable: true });
+  it('does nothing when `window` is undefined (server env)', () => {
+    const originalWindow = global.window;
+    // @ts-expect-error – remove window
+    delete global.window;
 
-    expect(() => saveWinStats(NEW_STATS)).not.toThrow();
+    // Should not throw
+    expect(() => saveWinStats(STATS)).not.toThrow();
 
-    Object.defineProperty(g, 'window', { value: orig, configurable: true });
+    global.window = originalWindow;
   });
 
   it('writes JSON to localStorage in browser env', () => {
-    const spy = jest
-      .spyOn(Storage.prototype, 'setItem')
-      .mockImplementation(jest.fn());
+    const setItem = jest.fn();
 
-    saveWinStats(NEW_STATS);
+    Object.defineProperty(window, 'localStorage', {
+      value: { getItem: jest.fn(), setItem },
+      writable: true,
+    });
 
-    expect(spy).toHaveBeenCalledWith(
-      'winStats',
-      JSON.stringify(NEW_STATS),
-    );
-
-    spy.mockRestore();
+    saveWinStats(STATS);
+    expect(setItem).toHaveBeenCalledWith('winStats', JSON.stringify(STATS));
   });
 });

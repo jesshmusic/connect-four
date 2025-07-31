@@ -7,28 +7,27 @@ import userEvent from '@testing-library/user-event';
 import GameBoard from '@/components/GameBoard';
 import type { PlayerColor } from '@/components/PlayerToken';
 
-import {
-  checkForWinner,
-  saveWinStats,
-} from '@/utils/connectFour';
+import { checkForWinner, saveWinStats } from '@/utils/connectFour';
 
 // ──────────────────────────────────────────────────────────────
 // 1.  Mocks
 // ──────────────────────────────────────────────────────────────
 
-// PlayerToken → keep enum but stub component
 jest.mock('@/components/PlayerToken', () => {
   const actual = jest.requireActual<typeof import('@/components/PlayerToken')>(
     '@/components/PlayerToken',
   );
   // eslint-disable-next-line react/display-name
-  const Mock = ({ player }: { player: PlayerColor }) => (
-    <span data-testid="token">{player}</span>
-  );
+  const Mock = ({
+                  player,
+                }: {
+    player: PlayerColor;
+    isDropping?: boolean;
+    dropRows?: number;
+  }) => <span data-testid="token">{player}</span>;
   return { __esModule: true, ...actual, default: Mock };
 });
 
-// DropButton stub
 jest.mock('@/components/DropButton', () => ({
   __esModule: true,
   default: ({
@@ -45,7 +44,6 @@ jest.mock('@/components/DropButton', () => ({
   ),
 }));
 
-// Connect-Four helpers
 jest.mock('@/utils/connectFour', () => {
   const actual = jest.requireActual<typeof import('@/utils/connectFour')>(
     '@/utils/connectFour',
@@ -59,7 +57,7 @@ jest.mock('@/utils/connectFour', () => {
 });
 
 // ──────────────────────────────────────────────────────────────
-// 2.  Global audio stub  (typed – no “any”)
+// 2.  Global <audio> stub
 // ──────────────────────────────────────────────────────────────
 class MockAudio implements Pick<HTMLAudioElement, 'play' | 'currentTime'> {
   currentTime = 0;
@@ -69,7 +67,7 @@ class MockAudio implements Pick<HTMLAudioElement, 'play' | 'currentTime'> {
 global.Audio = MockAudio;
 
 // ──────────────────────────────────────────────────────────────
-// 3.  Common test data
+// 3.  Common data & helpers
 // ──────────────────────────────────────────────────────────────
 const baseGameState = {
   currentPlayer: 'red' as PlayerColor,
@@ -78,7 +76,6 @@ const baseGameState = {
   shouldReset: false,
 };
 
-// helpers typed from the mocked module
 const mockedCheckForWinner = checkForWinner as jest.Mock;
 const mockedSaveWinStats = saveWinStats as jest.Mock;
 
@@ -91,6 +88,18 @@ describe('<GameBoard />', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  it('initially renders six drop buttons', () => {
+    render(
+      <GameBoard
+        gameState={baseGameState}
+        setGameState={setGameState}
+        winStats={{ redWins: 0, yellowWins: 0, draws: 0 }}
+        setWinStats={setWinStats}
+      />,
+    );
+    expect(screen.getAllByRole('button')).toHaveLength(6);
   });
 
   it('after a normal move switches to YELLOW’s turn', async () => {
@@ -117,7 +126,7 @@ describe('<GameBoard />', () => {
   });
 
   it('handles a RED win and updates win stats', async () => {
-    mockedCheckForWinner.mockReturnValue(1); // RED token id
+    mockedCheckForWinner.mockReturnValue(1);
 
     render(
       <GameBoard
@@ -164,11 +173,7 @@ describe('<GameBoard />', () => {
     );
   });
 
-  // ──────────────────────────────────────────────────────────────
-// 5.  Extra coverage: reset-useEffect + “column full” guard
-// ──────────────────────────────────────────────────────────────
-
-  it('runs the reset useEffect when shouldReset is true (lines 35-41)', () => {
+  it('runs the reset useEffect when shouldReset is true', () => {
     render(
       <GameBoard
         gameState={{ ...baseGameState, shouldReset: true }}
@@ -178,13 +183,12 @@ describe('<GameBoard />', () => {
       />,
     );
 
-    // useEffect fires synchronously after first paint
     expect(setGameState).toHaveBeenCalledWith(
       expect.objectContaining({ shouldReset: false }),
     );
   });
 
-  it('does nothing when a column is already full (lines 49, 71-72)', async () => {
+  it('removes the drop button when a column is full', async () => {
     mockedCheckForWinner.mockReturnValue(null);
 
     render(
@@ -196,20 +200,12 @@ describe('<GameBoard />', () => {
       />,
     );
 
-    // Fill column 0 (7 rows in the board)
+    // Fill column 0 (7 rows)
     for (let i = 0; i < 7; i++) {
       await userEvent.click(screen.getByTestId('drop-0'));
     }
 
-    // Clear mock counts, then click once more – column is full
-    setGameState.mockClear();
-    mockedCheckForWinner.mockClear();
-
-    await userEvent.click(screen.getByTestId('drop-0'));
-
-    // Early-return path: no state updates, winner check never called
-    expect(setGameState).not.toHaveBeenCalled();
-    expect(mockedCheckForWinner).not.toHaveBeenCalled();
+    // Button should now be gone
+    expect(screen.queryByTestId('drop-0')).toBeNull();
   });
-
 });

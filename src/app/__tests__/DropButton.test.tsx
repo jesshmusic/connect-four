@@ -6,9 +6,9 @@ import userEvent from '@testing-library/user-event';
 
 // ─── mock <PlayerToken> but keep its enum ─────────────────────
 jest.mock('@/components/PlayerToken', () => {
-  const actual = jest.requireActual<
-    typeof import('@/components/PlayerToken')
-  >('@/components/PlayerToken');
+  const actual = jest.requireActual<typeof import('@/components/PlayerToken')>(
+    '@/components/PlayerToken'
+  );
 
   const Stub = jest.fn(({ player }: { player: string }) => (
     <span data-testid="token">{player}</span>
@@ -34,11 +34,7 @@ describe('<DropButton />', () => {
 
   it('calls onClick with its column number when pressed', async () => {
     render(
-      <DropButton
-        onClick={handleClick}
-        columnNumber={col}
-        currentPlayer={PlayerColor.YELLOW}
-      />,
+      <DropButton onClick={handleClick} columnNumber={col} currentPlayer={PlayerColor.YELLOW} />
     );
 
     await userEvent.click(screen.getByRole('button'));
@@ -47,40 +43,26 @@ describe('<DropButton />', () => {
 
   it('passes correct props to PlayerToken', () => {
     const { rerender } = render(
-      <DropButton
-        onClick={handleClick}
-        columnNumber={col}
-        currentPlayer={PlayerColor.YELLOW}
-      />,
+      <DropButton onClick={handleClick} columnNumber={col} currentPlayer={PlayerColor.YELLOW} />
     );
 
     expect(PlayerTokenMock).toHaveBeenCalledWith(
       expect.objectContaining({ player: PlayerColor.YELLOW }),
-      {},
+      {}
     );
 
     rerender(
-      <DropButton
-        onClick={handleClick}
-        columnNumber={col}
-        currentPlayer={PlayerColor.RED}
-      />,
+      <DropButton onClick={handleClick} columnNumber={col} currentPlayer={PlayerColor.RED} />
     );
 
     expect(PlayerTokenMock).toHaveBeenCalledWith(
       expect.objectContaining({ player: PlayerColor.RED }),
-      {},
+      {}
     );
   });
 
   it('contains the hidden “Drop” label', () => {
-    render(
-      <DropButton
-        onClick={handleClick}
-        columnNumber={col}
-        currentPlayer={PlayerColor.RED}
-      />,
-    );
+    render(<DropButton onClick={handleClick} columnNumber={col} currentPlayer={PlayerColor.RED} />);
     expect(screen.getByText(/drop/i)).toBeInTheDocument();
   });
 });

@@ -10,10 +10,7 @@ import {
 
 /* ── helpers ────────────────────────────────────────────────── */
 
-const place = (
-  coords: Array<[x: number, y: number]>,
-  token: 1 | 2,
-) => {
+const place = (coords: Array<[x: number, y: number]>, token: 1 | 2) => {
   const board = deepClone(DEFAULT_BOARD_STATE);
   coords.forEach(([x, y]) => (board[x][y] = token));
   return board;
@@ -30,7 +27,7 @@ describe('checkForWinner – vertical / horizontal / diagonal', () => {
         [0, 2],
         [0, 3],
       ],
-      1,
+      1
     );
     expect(checkForWinner(board)).toBe(1);
   });
@@ -43,7 +40,7 @@ describe('checkForWinner – vertical / horizontal / diagonal', () => {
         [2, 0],
         [3, 0],
       ],
-      2,
+      2
     );
     expect(checkForWinner(board)).toBe(2);
   });
@@ -56,7 +53,7 @@ describe('checkForWinner – vertical / horizontal / diagonal', () => {
         [2, 2],
         [3, 3],
       ],
-      1,
+      1
     );
     expect(checkForWinner(board)).toBe(1);
   });
@@ -69,7 +66,7 @@ describe('checkForWinner – vertical / horizontal / diagonal', () => {
         [1, 2],
         [0, 3],
       ],
-      2,
+      2
     );
     expect(checkForWinner(board)).toBe(2);
   });

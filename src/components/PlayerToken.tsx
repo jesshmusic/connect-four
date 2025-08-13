@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 export enum PlayerColor {
-  RED = "red",
-  YELLOW = "yellow",
+  RED = 'red',
+  YELLOW = 'yellow',
 }
 
 interface PlayerTokenProps {
@@ -16,25 +16,25 @@ interface PlayerTokenProps {
 }
 
 const PlayerToken = ({
-                       player,
-                       size = 100,
-                       opacity = 1,
-                       isDropping = false,
-                       dropRows,
-                     }: PlayerTokenProps) => {
-  const playerColor = player === PlayerColor.YELLOW ? "#bc8e0d" : "#cc0000";
-  const playerColor2 = player === PlayerColor.YELLOW ? "#5d4505" : "#640000";
-  const px = typeof size === "number" ? `${size}px` : size;
+  player,
+  size = 100,
+  opacity = 1,
+  isDropping = false,
+  dropRows,
+}: PlayerTokenProps) => {
+  const playerColor = player === PlayerColor.YELLOW ? '#bc8e0d' : '#cc0000';
+  const playerColor2 = player === PlayerColor.YELLOW ? '#5d4505' : '#640000';
+  const px = typeof size === 'number' ? `${size}px` : size;
 
   return (
     <>
       <div
-        className={isDropping ? "cf-drop" : undefined}
+        className={isDropping ? 'cf-drop' : undefined}
         style={
           {
             width: px,
             height: px,
-            "--rows": dropRows ? dropRows : 0,
+            '--rows': dropRows ? dropRows : 0,
           } as React.CSSProperties
         }
       >

@@ -43,19 +43,23 @@ src/
 ## ⚙️ Core Logic Overview
 
 ### `page.tsx`
+
 - Manages `board`, `currentPlayer`, `winner`, and `statusMessage`
 - Contains `handleDrop(col)` to process token drops
 - Calls `checkForWinner()` from `connectFour.ts`
 
 ### `GameBoard.tsx`
+
 - Displays a 7x6 grid of tokens
 - Receives game state and triggers drops via `onDrop`
 
 ### `DropButton.tsx`
+
 - A small button shown above each column
 - Triggers sound and `onDrop()` when clicked
 
 ### `PlayerToken.tsx`
+
 - Renders a red or yellow circle representing a player
 
 ---
@@ -65,19 +69,23 @@ src/
 Defines game logic, types, and win-stat helpers.
 
 ### ➕ Types
+
 - `BoardState`, `GameState`, `WinStats`, `GameBoardProps`
 
 ### 🧩 Game Logic
+
 - `checkVerticalWinner(board)`
 - `checkHorizontalWinner(board)`
 - `checkDiagonalWinner(board)`
 - `checkForWinner(board)` — returns a winner token or `"draw"`
 
 ### ♻️ Utility
+
 - `deepClone(board)` — returns a deep copy
 - `DEFAULT_BOARD_STATE` — 7x6 `null` grid
 
 ### 🧮 Win Tracking
+
 - `loadWinStats()` — loads from localStorage
 - `saveWinStats(stats)` — saves to localStorage
 
@@ -118,6 +126,7 @@ yarn test
 ```
 
 Test file:
+
 ```
 src/app/__tests__/page.test.tsx
 ```

@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import Image from "next/image";
-import styles from "./page.module.css";
+import Image from 'next/image';
+import styles from './page.module.css';
 import GameBoard from '@/components/GameBoard';
-import PlayerToken, {PlayerColor} from '@/components/PlayerToken';
-import {useEffect, useState} from 'react';
-import {GameState, loadWinStats, WinStats} from '@/utils/connectFour';
+import PlayerToken, { PlayerColor } from '@/components/PlayerToken';
+import { useEffect, useState } from 'react';
+import { GameState, loadWinStats, WinStats } from '@/utils/connectFour';
 
 const DEFAULT_GAME_STATE = {
   currentPlayer: PlayerColor.RED,
@@ -19,7 +19,7 @@ export default function Home() {
   const [winStats, setWinStats] = useState<WinStats>({
     redWins: 0,
     yellowWins: 0,
-    draws: 0
+    draws: 0,
   });
 
   useEffect(() => {
@@ -55,7 +55,13 @@ export default function Home() {
         <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 3rem)', marginBottom: 0 }}>Connect Four</h1>
 
         <div style={{ display: 'flex', textAlign: 'center', color: '#fcc' }}>
-          <p><strong style={{ fontSize: '1.1rem', marginRight: '10px', textDecoration: 'underline' }}>Stats:</strong></p>
+          <p>
+            <strong
+              style={{ fontSize: '1.1rem', marginRight: '10px', textDecoration: 'underline' }}
+            >
+              Stats:
+            </strong>
+          </p>
           <p style={{ marginRight: '10px' }}>Red: {winStats.redWins}</p>
           <p style={{ marginRight: '10px' }}>Yellow: {winStats.yellowWins}</p>
           <p>Draws: {winStats.draws}</p>
@@ -127,17 +133,10 @@ export default function Home() {
           rel="noopener noreferrer"
           style={{ color: '#ededed', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
-          <Image
-            aria-hidden
-            src="/Token.svg"
-            alt="Token icon"
-            width={30}
-            height={30}
-          />
+          <Image aria-hidden src="/Token.svg" alt="Token icon" width={30} height={30} />
           &copy; 2025 Jess Hendricks
         </a>
       </footer>
     </div>
   );
-
 }

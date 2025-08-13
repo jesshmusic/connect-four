@@ -15,39 +15,28 @@ import { checkForWinner, saveWinStats } from '@/utils/connectFour';
 
 jest.mock('@/components/PlayerToken', () => {
   const actual = jest.requireActual<typeof import('@/components/PlayerToken')>(
-    '@/components/PlayerToken',
+    '@/components/PlayerToken'
   );
   // eslint-disable-next-line react/display-name
-  const Mock = ({
-                  player,
-                }: {
-    player: PlayerColor;
-    isDropping?: boolean;
-    dropRows?: number;
-  }) => <span data-testid="token">{player}</span>;
+  const Mock = ({ player }: { player: PlayerColor; isDropping?: boolean; dropRows?: number }) => (
+    <span data-testid="token">{player}</span>
+  );
   return { __esModule: true, ...actual, default: Mock };
 });
 
 jest.mock('@/components/DropButton', () => ({
   __esModule: true,
   default: ({
-              onClick,
-              columnNumber,
-            }: {
+    onClick,
+    columnNumber,
+  }: {
     onClick: (col: number) => void;
     columnNumber: number;
-  }) => (
-    <button
-      data-testid={`drop-${columnNumber}`}
-      onClick={() => onClick(columnNumber)}
-    />
-  ),
+  }) => <button data-testid={`drop-${columnNumber}`} onClick={() => onClick(columnNumber)} />,
 }));
 
 jest.mock('@/utils/connectFour', () => {
-  const actual = jest.requireActual<typeof import('@/utils/connectFour')>(
-    '@/utils/connectFour',
-  );
+  const actual = jest.requireActual<typeof import('@/utils/connectFour')>('@/utils/connectFour');
   return {
     __esModule: true,
     ...actual,
@@ -97,7 +86,7 @@ describe('<GameBoard />', () => {
         setGameState={setGameState}
         winStats={{ redWins: 0, yellowWins: 0, draws: 0 }}
         setWinStats={setWinStats}
-      />,
+      />
     );
     expect(screen.getAllByRole('button')).toHaveLength(6);
   });
@@ -111,7 +100,7 @@ describe('<GameBoard />', () => {
         setGameState={setGameState}
         winStats={{ redWins: 0, yellowWins: 0, draws: 0 }}
         setWinStats={setWinStats}
-      />,
+      />
     );
 
     await userEvent.click(screen.getByTestId('drop-0'));
@@ -121,7 +110,7 @@ describe('<GameBoard />', () => {
       expect.objectContaining({
         currentPlayer: 'yellow',
         statusMessage: "YELLOW's turn",
-      }),
+      })
     );
   });
 
@@ -134,20 +123,18 @@ describe('<GameBoard />', () => {
         setGameState={setGameState}
         winStats={{ redWins: 0, yellowWins: 0, draws: 0 }}
         setWinStats={setWinStats}
-      />,
+      />
     );
 
     await userEvent.click(screen.getByTestId('drop-1'));
 
-    expect(setWinStats).toHaveBeenCalledWith(
-      expect.objectContaining({ redWins: 1 }),
-    );
+    expect(setWinStats).toHaveBeenCalledWith(expect.objectContaining({ redWins: 1 }));
     expect(mockedSaveWinStats).toHaveBeenCalled();
     expect(setGameState).toHaveBeenCalledWith(
       expect.objectContaining({
         hasWinner: true,
         statusMessage: 'RED wins!',
-      }),
+      })
     );
   });
 
@@ -160,17 +147,13 @@ describe('<GameBoard />', () => {
         setGameState={setGameState}
         winStats={{ redWins: 0, yellowWins: 0, draws: 0 }}
         setWinStats={setWinStats}
-      />,
+      />
     );
 
     await userEvent.click(screen.getByTestId('drop-2'));
 
-    expect(setWinStats).toHaveBeenCalledWith(
-      expect.objectContaining({ draws: 1 }),
-    );
-    expect(setGameState).toHaveBeenCalledWith(
-      expect.objectContaining({ statusMessage: 'Draw!' }),
-    );
+    expect(setWinStats).toHaveBeenCalledWith(expect.objectContaining({ draws: 1 }));
+    expect(setGameState).toHaveBeenCalledWith(expect.objectContaining({ statusMessage: 'Draw!' }));
   });
 
   it('runs the reset useEffect when shouldReset is true', () => {
@@ -180,12 +163,10 @@ describe('<GameBoard />', () => {
         setGameState={setGameState}
         winStats={{ redWins: 0, yellowWins: 0, draws: 0 }}
         setWinStats={setWinStats}
-      />,
+      />
     );
 
-    expect(setGameState).toHaveBeenCalledWith(
-      expect.objectContaining({ shouldReset: false }),
-    );
+    expect(setGameState).toHaveBeenCalledWith(expect.objectContaining({ shouldReset: false }));
   });
 
   it('removes the drop button when a column is full', async () => {
@@ -197,7 +178,7 @@ describe('<GameBoard />', () => {
         setGameState={setGameState}
         winStats={{ redWins: 0, yellowWins: 0, draws: 0 }}
         setWinStats={setWinStats}
-      />,
+      />
     );
 
     // Fill column 0 (7 rows)

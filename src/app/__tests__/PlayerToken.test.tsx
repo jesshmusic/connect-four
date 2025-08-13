@@ -10,9 +10,7 @@ const getCircles = (container: HTMLElement) =>
 
 describe('<PlayerToken />', () => {
   it('renders a RED token with default size (100) and opacity (1.0)', () => {
-    const { container } = render(
-      <PlayerToken player={PlayerColor.RED} />,
-    );
+    const { container } = render(<PlayerToken player={PlayerColor.RED} />);
 
     const svg = container.querySelector('svg')!;
     expect(svg).toHaveAttribute('width', '100px');
@@ -26,7 +24,7 @@ describe('<PlayerToken />', () => {
 
   it('renders a YELLOW token with custom numeric size and opacity', () => {
     const { container } = render(
-      <PlayerToken player={PlayerColor.YELLOW} size={150} opacity={0.4} />,
+      <PlayerToken player={PlayerColor.YELLOW} size={150} opacity={0.4} />
     );
 
     const svg = container.querySelector('svg')!;
@@ -40,9 +38,7 @@ describe('<PlayerToken />', () => {
   });
 
   it('accepts string size values (e.g., "200px")', () => {
-    const { container } = render(
-      <PlayerToken player={PlayerColor.RED} size="200px" />,
-    );
+    const { container } = render(<PlayerToken player={PlayerColor.RED} size="200px" />);
 
     const svg = container.querySelector('svg')!;
     expect(svg).toHaveAttribute('width', '200px');

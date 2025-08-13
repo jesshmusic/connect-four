@@ -72,9 +72,7 @@ describe('<Home />', () => {
   it('renders heading, status banner, and initial win stats', () => {
     render(<Home />);
 
-    expect(
-      screen.getByRole('heading', { name: /connect four/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /connect four/i })).toBeInTheDocument();
     expect(screen.getByText(/red: 3/i)).toBeInTheDocument();
     expect(screen.getByText(/yellow: 2/i)).toBeInTheDocument();
     expect(screen.getByText(/draws: 1/i)).toBeInTheDocument();

@@ -46,19 +46,22 @@ describe('<DropButton />', () => {
       <DropButton onClick={handleClick} columnNumber={col} currentPlayer={PlayerColor.YELLOW} />
     );
 
-    expect(PlayerTokenMock).toHaveBeenCalledWith(
-      expect.objectContaining({ player: PlayerColor.YELLOW }),
-      {}
-    );
+    expect(PlayerTokenMock).toHaveBeenCalled();
+    expect(PlayerTokenMock.mock.calls[0][0]).toEqual({
+      player: PlayerColor.YELLOW,
+      size: '100%',
+      opacity: 0.5,
+    });
 
     rerender(
       <DropButton onClick={handleClick} columnNumber={col} currentPlayer={PlayerColor.RED} />
     );
 
-    expect(PlayerTokenMock).toHaveBeenCalledWith(
-      expect.objectContaining({ player: PlayerColor.RED }),
-      {}
-    );
+    expect(PlayerTokenMock.mock.calls[1][0]).toEqual({
+      player: PlayerColor.RED,
+      size: '100%',
+      opacity: 0.5,
+    });
   });
 
   it('contains the hidden “Drop” label', () => {

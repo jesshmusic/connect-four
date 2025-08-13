@@ -107,14 +107,10 @@ describe('loadWinStats()', () => {
   const DEFAULTS: WinStats = { redWins: 0, yellowWins: 0, draws: 0 };
 
   it('returns defaults when `window` is undefined (server env)', () => {
-    // Backup and delete the global window reference
     const originalWindow = global.window;
     // @ts-expect-error – we intentionally remove it
     delete global.window;
-
     expect(loadWinStats()).toEqual(DEFAULTS);
-
-    // Restore window so other tests stay happy
     global.window = originalWindow;
   });
 

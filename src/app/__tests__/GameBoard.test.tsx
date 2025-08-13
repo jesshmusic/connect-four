@@ -88,7 +88,7 @@ describe('<GameBoard />', () => {
         setWinStats={setWinStats}
       />
     );
-    expect(screen.getAllByRole('button')).toHaveLength(6);
+    expect(screen.getAllByRole('button')).toHaveLength(7);
   });
 
   it('after a normal move switches to YELLOW’s turn', async () => {
@@ -182,7 +182,7 @@ describe('<GameBoard />', () => {
     );
 
     // Fill column 0 (7 rows)
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 6; i++) {
       await userEvent.click(screen.getByTestId('drop-0'));
     }
 

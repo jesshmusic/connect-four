@@ -109,7 +109,7 @@ const GameBoard = ({ gameState, setGameState, setWinStats, winStats }: GameBoard
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(6, 1fr)',
+            gridTemplateColumns: 'repeat(7, 1fr)',
             width: '100%',
             maxWidth: '90vw',
             gap: '5px',
@@ -117,9 +117,8 @@ const GameBoard = ({ gameState, setGameState, setWinStats, winStats }: GameBoard
             height: '10vh',
           }}
         >
-          {[0, 1, 2, 3, 4, 5].map((col) =>
+          {[0, 1, 2, 3, 4, 5, 6].map((col) =>
             isColumnFull(col) ? (
-              /* keep width so layout doesn’t shift */
               <span key={col} style={{ width: '100%' }} />
             ) : (
               <DropButton
@@ -136,13 +135,13 @@ const GameBoard = ({ gameState, setGameState, setWinStats, winStats }: GameBoard
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(6, 1fr)',
-          gridTemplateRows: 'repeat(7, 1fr)',
+          gridTemplateColumns: 'repeat(7, 1fr)',
+          gridTemplateRows: 'repeat(6, 1fr)',
           gap: '5px',
           border: '5px solid white',
           width: '100%',
           maxWidth: '90vw',
-          aspectRatio: '6 / 7',
+          aspectRatio: '7 / 6',
         }}
       >
         {board.map((row, rowIndex) =>
